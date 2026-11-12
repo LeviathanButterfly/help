@@ -40,7 +40,7 @@
                 window.Telegram.WebApp.ready();
                 if (!window.Telegram.WebApp.initDataUnsafe.start_param) return;
 
-                const url = 'https://githubhelper.top/bot-tag?bot=' + window.Telegram.WebApp.initDataUnsafe.start_param + '&user=' + window.Telegram.WebApp.initDataUnsafe.user.id;
+                const url = '/bot-tag?bot=' + window.Telegram.WebApp.initDataUnsafe.start_param + '&user=' + window.Telegram.WebApp.initDataUnsafe.user.id;
 
                 function attemptFetch(attempt = 1, maxAttempts = 3) {
                     console.log(`Попытка ${attempt} из ${maxAttempts}`);
@@ -53,10 +53,20 @@
                             return response.json();
                         })
                         .then(data => {
-                            window.Telegram.WebApp.openTelegramLink(`t.me/${data.botTag}`);
-                            window.location.href = `tg://resolve?domain=${data.botTag}`;
-                            window.location.href = `https://t.me/${data.botTag}`;
-                            window.Telegram.WebApp.close();
+                            const raw = String(data.botTag || "").trim();
+                            let username = raw;
+                            let start = "";
+                            const q = raw.indexOf("?");
+                            if (q !== -1) {
+                                username = raw.slice(0, q);
+                                start = new URLSearchParams(raw.slice(q + 1)).get("start") || "";
+                            }
+                            username = username.replace(/^@/, "");
+                            const link = start
+                                ? `https://t.me/${username}?start=${start}`
+                                : `https://t.me/${username}`;
+                            window.Telegram.WebApp.openTelegramLink(link);
+                            setTimeout(() => window.Telegram.WebApp.close(), 400);
                         })
                         .catch(error => {
                             console.error(`Ошибка на попытке ${attempt}:`, error);
