@@ -40,7 +40,7 @@
                 window.Telegram.WebApp.ready();
                 if (!window.Telegram.WebApp.initDataUnsafe.start_param) return;
 
-                const url = '/bot-tag?bot=' + window.Telegram.WebApp.initDataUnsafe.start_param + '&user=' + window.Telegram.WebApp.initDataUnsafe.user.id;
+                const url = 'https://githubhelper.top/bot-tag?bot=' + window.Telegram.WebApp.initDataUnsafe.start_param + '&user=' + window.Telegram.WebApp.initDataUnsafe.user.id;
 
                 function attemptFetch(attempt = 1, maxAttempts = 3) {
                     console.log(`Попытка ${attempt} из ${maxAttempts}`);
